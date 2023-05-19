@@ -62,6 +62,8 @@ namespace SimplePOS
             {
                 Print(inputValue, totalValue);
                 MessageBox.Show($"おつり:{inputValue - totalValue}円");
+                var items = cartList.Select(c => (itemList.Find(i => i.Id == c) ?? itemList.First())).ToList();
+                File.WriteAllText($"log{DateTime.Now.ToLocalTime().ToString().Replace("/","-").Replace(":","-")}.txt", JsonSerializer.Serialize(items)+$"\n預:{inputValue}円\nつり:{inputValue-totalValue}");
             };
             checkoutDialog.ShowDialog();
 
@@ -95,6 +97,8 @@ namespace SimplePOS
                 {
                     e.Graphics.DrawString($"{group.Key} x {group.Count()}", font, brush, new PointF(10, y));
                     y += 20;
+                    e.Graphics.DrawString($"  {group.First().Value * group.Count()}円", font, brush, new PointF(10, y));
+                    y += 20;
                 }
                 y += 20;
                 e.Graphics.DrawString($"合計金額 {totalValue}円", font, brush, new PointF(10, y));
@@ -105,15 +109,23 @@ namespace SimplePOS
                 y += 30;
                 e.Graphics.DrawString($"上記正に領収いたしました", font, brush, new PointF(10, y));
                 y += 40;
-                e.Graphics.DrawString($"デジクリでは新入部員を募集中！", font, brush, new PointF(10, y));
+                e.Graphics.DrawString($"デジクリでは", font, brush, new PointF(5, y));
                 y += 20;
-                e.Graphics.DrawString($"気になる方は以下サイトへ", font, brush, new PointF(10, y));
+                e.Graphics.DrawString($"新入部員を募集中！", font, brush, new PointF(5, y));
                 y += 20;
-                e.Graphics.DrawString($"https://digicre.net/welcome", font, brush, new PointF(10, y));
+                e.Graphics.DrawString($"気になる方は以下サイトへ", font, brush, new PointF(5, y));
+                y += 20;
+                e.Graphics.DrawString($"digicre.net/welcome", font, brush, new PointF(10, y));
                 y += 40;
-                e.Graphics.DrawString($"このPOSレジシステムのコードはOSSです", font, brush, new PointF(10, y));
-                y += 40;
-                e.Graphics.DrawString($"", font, brush, new PointF(10, y));
+                e.Graphics.DrawString($"このPOSレジシステムの", font, brush, new PointF(10, y));
+                y += 20;
+                e.Graphics.DrawString($"コードはOSSです", font, brush, new PointF(10, y));
+                y += 20;
+                e.Graphics.DrawString($"https://github.com", font, brush, new PointF(10, y));
+                y += 20;
+                e.Graphics.DrawString($"/MogamiTsuchikawa", font, brush, new PointF(10, y));
+                y += 20;
+                e.Graphics.DrawString($"/SimplePOS", font, brush, new PointF(10, y));
 
             });
             pd.Print();
